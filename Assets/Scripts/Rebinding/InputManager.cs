@@ -133,7 +133,6 @@ public class InputManager : MonoBehaviour
 
         rebindStarted?.Invoke(actionToRebind, bindingIndex);
         rebind.Start();
-        Debug.Log("");
     }
 
     public static string GetBindingName(string actionName, int bindingIndex)
