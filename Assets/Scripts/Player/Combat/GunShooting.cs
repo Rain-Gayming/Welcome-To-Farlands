@@ -11,7 +11,7 @@ public class GunShooting : MonoBehaviour
     public bool equipped = true;
     float fireTime;
     int ammo;
-    bool canShoot;
+    bool canShoot = true;
     bool running;
     bool shooting;
     // Start is called before the first frame update
@@ -64,6 +64,10 @@ public class GunShooting : MonoBehaviour
         
             if(InputManager.instance.reloading && !running && !shooting){
                 StartCoroutine(ReloadCo());
+            }
+
+            if(InputManager.instance.checkAmmo){
+                Debug.Log(ammo);
             }
 
             if(InputManager.instance.changeFireMode){
