@@ -46,11 +46,13 @@ public class InGameManager : MonoBehaviour
         optionsMenu.GetComponentInParent<Menu>().open = false;
     }
 
-    public IEnumerator GunInfoCo(string text)
+    public IEnumerator GunInfoCo(string text, GunShooting gun)
     {
         gunInfoText.text = text;
+        gun.canShoot = false;
         gunInfoUI.SetActive(true);
         yield return new WaitForSeconds(6f);
+        gun.canShoot = true;
         gunInfoUI.SetActive(false);
     }
 }

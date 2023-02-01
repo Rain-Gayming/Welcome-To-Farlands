@@ -11,7 +11,7 @@ public class GunShooting : MonoBehaviour
     public bool equipped = true;
     float fireTime;
     int ammo;
-    bool canShoot = true;
+    public bool canShoot = true;
     bool running;
     bool shooting;
     // Start is called before the first frame update
@@ -68,7 +68,7 @@ public class GunShooting : MonoBehaviour
 
             if(InputManager.instance.checkAmmo){
                 anim.SetBool("Ammo Checking", true);
-                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString()));
+                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString(), this));
             }else{
                 anim.SetBool("Ammo Checking", false);                
             }
