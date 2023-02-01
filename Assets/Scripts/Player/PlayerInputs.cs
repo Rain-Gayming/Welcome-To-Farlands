@@ -214,6 +214,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheckAmmo"",
+                    ""type"": ""Button"",
+                    ""id"": ""d14a1ae2-87be-4f6e-8af9-a5992fe12a9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -260,6 +269,85 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd596b12-7bf9-4c40-8b6a-6f2b0808e30c"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""CheckAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Process Keys"",
+            ""id"": ""b54766dd-a2d3-47e6-9139-8bd1ec48a73d"",
+            ""actions"": [
+                {
+                    ""name"": ""Alt"",
+                    ""type"": ""Button"",
+                    ""id"": ""940b98c5-42c5-421f-9a20-812a21e100fb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Control"",
+                    ""type"": ""Button"",
+                    ""id"": ""c55bbf0d-4cf0-44f6-b1b0-eb3e10f689f0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""ce732fac-c308-429d-9f5d-52c752bf26a8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c215e216-597e-4f22-adac-3b70b6d509d2"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Alt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a041c2c-09f4-4cf8-9dd9-85e5e0ca9338"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Control"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f998e3e4-398b-470e-86cc-4db254a1f41a"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -296,6 +384,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Combat_Aiming = m_Combat.FindAction("Aiming", throwIfNotFound: true);
         m_Combat_ChangeFireMode = m_Combat.FindAction("ChangeFireMode", throwIfNotFound: true);
         m_Combat_Reload = m_Combat.FindAction("Reload", throwIfNotFound: true);
+        m_Combat_CheckAmmo = m_Combat.FindAction("CheckAmmo", throwIfNotFound: true);
+        // Process Keys
+        m_ProcessKeys = asset.FindActionMap("Process Keys", throwIfNotFound: true);
+        m_ProcessKeys_Alt = m_ProcessKeys.FindAction("Alt", throwIfNotFound: true);
+        m_ProcessKeys_Control = m_ProcessKeys.FindAction("Control", throwIfNotFound: true);
+        m_ProcessKeys_Shift = m_ProcessKeys.FindAction("Shift", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -424,6 +518,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_Aiming;
     private readonly InputAction m_Combat_ChangeFireMode;
     private readonly InputAction m_Combat_Reload;
+    private readonly InputAction m_Combat_CheckAmmo;
     public struct CombatActions
     {
         private @PlayerInputs m_Wrapper;
@@ -432,6 +527,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @Aiming => m_Wrapper.m_Combat_Aiming;
         public InputAction @ChangeFireMode => m_Wrapper.m_Combat_ChangeFireMode;
         public InputAction @Reload => m_Wrapper.m_Combat_Reload;
+        public InputAction @CheckAmmo => m_Wrapper.m_Combat_CheckAmmo;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -453,6 +549,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Reload.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnReload;
                 @Reload.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnReload;
                 @Reload.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnReload;
+                @CheckAmmo.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckAmmo;
+                @CheckAmmo.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckAmmo;
+                @CheckAmmo.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckAmmo;
             }
             m_Wrapper.m_CombatActionsCallbackInterface = instance;
             if (instance != null)
@@ -469,10 +568,62 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @CheckAmmo.started += instance.OnCheckAmmo;
+                @CheckAmmo.performed += instance.OnCheckAmmo;
+                @CheckAmmo.canceled += instance.OnCheckAmmo;
             }
         }
     }
     public CombatActions @Combat => new CombatActions(this);
+
+    // Process Keys
+    private readonly InputActionMap m_ProcessKeys;
+    private IProcessKeysActions m_ProcessKeysActionsCallbackInterface;
+    private readonly InputAction m_ProcessKeys_Alt;
+    private readonly InputAction m_ProcessKeys_Control;
+    private readonly InputAction m_ProcessKeys_Shift;
+    public struct ProcessKeysActions
+    {
+        private @PlayerInputs m_Wrapper;
+        public ProcessKeysActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Alt => m_Wrapper.m_ProcessKeys_Alt;
+        public InputAction @Control => m_Wrapper.m_ProcessKeys_Control;
+        public InputAction @Shift => m_Wrapper.m_ProcessKeys_Shift;
+        public InputActionMap Get() { return m_Wrapper.m_ProcessKeys; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ProcessKeysActions set) { return set.Get(); }
+        public void SetCallbacks(IProcessKeysActions instance)
+        {
+            if (m_Wrapper.m_ProcessKeysActionsCallbackInterface != null)
+            {
+                @Alt.started -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnAlt;
+                @Alt.performed -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnAlt;
+                @Alt.canceled -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnAlt;
+                @Control.started -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnControl;
+                @Control.performed -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnControl;
+                @Control.canceled -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnControl;
+                @Shift.started -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_ProcessKeysActionsCallbackInterface.OnShift;
+            }
+            m_Wrapper.m_ProcessKeysActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Alt.started += instance.OnAlt;
+                @Alt.performed += instance.OnAlt;
+                @Alt.canceled += instance.OnAlt;
+                @Control.started += instance.OnControl;
+                @Control.performed += instance.OnControl;
+                @Control.canceled += instance.OnControl;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
+            }
+        }
+    }
+    public ProcessKeysActions @ProcessKeys => new ProcessKeysActions(this);
     private int m_KBMSchemeIndex = -1;
     public InputControlScheme KBMScheme
     {
@@ -496,5 +647,12 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnAiming(InputAction.CallbackContext context);
         void OnChangeFireMode(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnCheckAmmo(InputAction.CallbackContext context);
+    }
+    public interface IProcessKeysActions
+    {
+        void OnAlt(InputAction.CallbackContext context);
+        void OnControl(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
     }
 }
