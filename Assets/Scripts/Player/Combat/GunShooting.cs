@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GunShooting : MonoBehaviour
 {
+    public Recoil recoil;
     public Animator anim;
     public GunStats info;
     public EFireMode currentFireMode;
@@ -18,6 +19,7 @@ public class GunShooting : MonoBehaviour
     void Start()
     {
         ammo = info.maxAmmo;
+        recoil = GetComponentInParent<Recoil>();
         anim = GetComponentInParent<Animator>();
     }
 
@@ -25,6 +27,8 @@ public class GunShooting : MonoBehaviour
     void Update()
     {
         if(!InGameManager.instance.paused && equipped){
+
+
             fireTime -= Time.deltaTime;
 
             anim.SetLayerWeight(info.animationLayer, 1);
@@ -46,6 +50,7 @@ public class GunShooting : MonoBehaviour
                         if(currentFireMode == EFireMode.single){
                             InputManager.instance.shooting = false;
                         }
+                        recoil.RecoilFire();
                     }
                 }else{
                     anim.SetBool("Shooting", false);
@@ -58,8 +63,18 @@ public class GunShooting : MonoBehaviour
             
             if(InputManager.instance.aiming){
                 anim.SetBool("Aiming", true);
+                recoil.recoilX = info.aimRecoilX;
+                recoil.recoilY = info.aimRecoilY;
+                recoil.recoilZ = info.aimRecoilZ;
+                recoil.snappiness = info.snappiness;
+                recoil.returnSpeed = info.returnSpeed;
             }else{
                 anim.SetBool("Aiming", false);
+                recoil.recoilX = info.pointFireRecoilX;
+                recoil.recoilY = info.pointFireRecoilY;
+                recoil.recoilZ = info.pointFireRecoilZ;
+                recoil.snappiness = info.snappiness;
+                recoil.returnSpeed = info.returnSpeed;
             }
         
             if(InputManager.instance.reloading && !running && !shooting){

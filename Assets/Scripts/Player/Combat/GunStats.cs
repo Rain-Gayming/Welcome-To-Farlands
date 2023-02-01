@@ -17,4 +17,14 @@ public class GunStats : ScriptableObject
     public float range;
     public float fireRate;
     public float damage;
+
+    [Header("Recoil")]
+    public float pointFireRecoilX;
+    public float pointFireRecoilY;
+    public float pointFireRecoilZ;
+    public float aimRecoilX;
+    public float aimRecoilY;
+    public float aimRecoilZ;
+    public float snappiness;
+    public float returnSpeed;
 }
