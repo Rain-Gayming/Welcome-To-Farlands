@@ -67,7 +67,10 @@ public class GunShooting : MonoBehaviour
             }
 
             if(InputManager.instance.checkAmmo){
-                Debug.Log(ammo);
+                anim.SetBool("Ammo Checking", true);
+                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString()));
+            }else{
+                anim.SetBool("Ammo Checking", false);                
             }
 
             if(InputManager.instance.changeFireMode){

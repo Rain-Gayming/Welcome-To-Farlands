@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class InGameManager : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class InGameManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject optionsMenu;
 
+    [Header("Gun Info")]
+    public GameObject gunInfoUI;
+    public TMP_Text gunInfoText;
+    
     private void Awake() {
         instance = this;
     }
@@ -39,5 +44,13 @@ public class InGameManager : MonoBehaviour
         optionsMenu.GetComponentInParent<Menu>().open = true;
         yield return new WaitForEndOfFrame();
         optionsMenu.GetComponentInParent<Menu>().open = false;
+    }
+
+    public IEnumerator GunInfoCo(string text)
+    {
+        gunInfoText.text = text;
+        gunInfoUI.SetActive(true);
+        yield return new WaitForSeconds(6f);
+        gunInfoUI.SetActive(false);
     }
 }
