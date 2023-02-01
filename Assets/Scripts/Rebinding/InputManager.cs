@@ -74,7 +74,7 @@ public class InputManager : MonoBehaviour
         inputActions.ProcessKeys.Shift.performed += x => shift = true;
         inputActions.ProcessKeys.Shift.canceled += x => shift = false;
         inputActions.ProcessKeys.Control.performed += x => control = true;
-        inputActions.ProcessKeys.Control.canceled += x => control = false;
+        inputActions.ProcessKeys.Control.canceled += x => control = false; 
     }
 
 
@@ -133,6 +133,7 @@ public class InputManager : MonoBehaviour
 
         rebindStarted?.Invoke(actionToRebind, bindingIndex);
         rebind.Start();
+        Debug.Log("");
     }
 
     public static string GetBindingName(string actionName, int bindingIndex)
