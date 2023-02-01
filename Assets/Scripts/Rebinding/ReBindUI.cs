@@ -29,6 +29,7 @@ public class ReBindUI : MonoBehaviour
         rebindButton.onClick.AddListener(() => DoRebind());
         rebindButton.onClick.AddListener(() => ResetBinding());
         if(inputActionReference != null){
+            InputManager.LoadBindingOverride(actionName);
             GetBindingInfo();
             UpdateUI();  
         }
@@ -77,7 +78,6 @@ public class ReBindUI : MonoBehaviour
         if(rebindText != null){
             rebindText.text = InputManager.GetBindingName(actionName, bindingIndex);
         }
-
     }
 
     public void DoRebind()

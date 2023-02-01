@@ -123,6 +123,8 @@ public class InputManager : MonoBehaviour
             }
 
             rebindComplete?.Invoke();
+
+            SaveBindingOverride(actionToRebind);
         });
         rebind.OnCancel(operation =>
         {
@@ -164,6 +166,30 @@ public class InputManager : MonoBehaviour
         }else
         {
             action.RemoveBindingOverride(bindingIndex);
+        }
+    }
+
+    public static void SaveBindingOverride(InputAction action)
+    {
+        for (int i = 0; i < action.bindings.Count; i++)
+        {
+            //replace with something like json saving
+            PlayerPrefs.SetString(action.actionMap + action.name + i, action.bindings[i].overridePath);
+        }
+    }
+
+    public static void LoadBindingOverride(string actionName)
+    {
+        if(inputActions == null){
+            inputActions = new PlayerInputs();
+        }
+
+        InputAction action = inputActions.asset.FindAction(actionName);
+
+        for (int i = 0; i < action.bindings.Count; i++)
+        {
+            if(!string.IsNullOrEmpty(PlayerPrefs.GetString(action.actionMap + action.name + i)))
+                action.ApplyBindingOverride(i, PlayerPrefs.GetString(action.actionMap + action.name + i));
         }
     }
 }
