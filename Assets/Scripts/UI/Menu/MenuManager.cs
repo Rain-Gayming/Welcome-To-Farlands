@@ -20,6 +20,15 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    private void Update() {
+        for (int i = 0; i < menus.Count; i++)
+        {
+            if(menus[i].menuName == "Pause"){
+                menus[i].open = InGameManager.instance.paused;
+            }
+        }
+    }
+
     public void OpenMenu(Menu menu)
     {
         for (int i = 0; i < menus.Count; i++)

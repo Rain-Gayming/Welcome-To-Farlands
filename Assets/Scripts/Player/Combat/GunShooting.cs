@@ -86,6 +86,7 @@ public class GunShooting : MonoBehaviour
             if(InputManager.instance.checkAmmo){
                 anim.SetBool("Ammo Checking", true);
                 StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString(), this));
+                StartCoroutine(CheckGunCo());
             }else{
                 anim.SetBool("Ammo Checking", false);                
             }
@@ -116,8 +117,16 @@ public class GunShooting : MonoBehaviour
         anim.SetBool("Reloading", true);
         yield return new WaitForSeconds(info.reloadTime);
         ammo = info.maxAmmo;
-        canShoot = transform;
+        canShoot = true;
         anim.SetBool("Reloading", false);
+    }
+    public IEnumerator CheckGunCo()
+    {
+        canShoot = false;
+        anim.SetBool("Ammo Checking", true);
+        yield return new WaitForSeconds(3f);
+        canShoot = true;
+        anim.SetBool("Ammo Checking", false);    
     }
 }
 
