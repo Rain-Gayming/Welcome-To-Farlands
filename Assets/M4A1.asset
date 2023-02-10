@@ -19,3 +19,11 @@ MonoBehaviour:
   range: 500
   fireRate: 0.1
   damage: 25
+  pointFireRecoilX: -2
+  pointFireRecoilY: 1
+  pointFireRecoilZ: 0
+  aimRecoilX: -1
+  aimRecoilY: 0.5
+  aimRecoilZ: 0
+  snappiness: 3
+  returnSpeed: 2

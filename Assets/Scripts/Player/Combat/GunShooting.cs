@@ -7,6 +7,7 @@ public class GunShooting : MonoBehaviour
     public Recoil recoil;
     public Animator anim;
     public GunStats info;
+    public GameObject impact;
     public EFireMode currentFireMode;
     public Transform shootPoint;
     public bool equipped = true;
@@ -50,6 +51,7 @@ public class GunShooting : MonoBehaviour
                         if(currentFireMode == EFireMode.single){
                             InputManager.instance.shooting = false;
                         }
+                        Instantiate(impact, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal, Vector3.up) * impact.transform.rotation);
                         recoil.RecoilFire();
                     }
                 }else{
