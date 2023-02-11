@@ -920,10 +920,10 @@ RectTransform:
   m_Father: {fileID: 1213098037}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 776.45685, y: -503.80002}
-  m_SizeDelta: {x: -1642.9138, y: -1037.6001}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 786, y: -372}
+  m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &788005972
 MonoBehaviour:
@@ -2645,7 +2645,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   open: 0
-  menuName: 
+  menuName: Pause
   relatedMenu: {fileID: 1360696656}
 --- !u!114 &1527555406
 MonoBehaviour:

@@ -27,7 +27,7 @@ public class ReBindUI : MonoBehaviour
     public void OnEnable()
     {
         rebindButton.onClick.AddListener(() => DoRebind());
-        rebindButton.onClick.AddListener(() => ResetBinding());
+        resetButton.onClick.AddListener(() => ResetBinding());
         if(inputActionReference != null){
             InputManager.LoadBindingOverride(actionName);
             GetBindingInfo();

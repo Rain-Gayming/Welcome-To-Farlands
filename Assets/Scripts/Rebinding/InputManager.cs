@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEditor.UI;
-using System;
 using TMPro;
 
 public class InputManager : MonoBehaviour
@@ -14,6 +15,9 @@ public class InputManager : MonoBehaviour
     public static event Action rebindComplete;
     public static event Action rebindCanceled;
     public static event Action<InputAction, int> rebindStarted;
+
+    static KeybindData myKeybindData = new KeybindData();
+    public static string saveFile;
 
     [Header("Movement")]
     public Vector2 walking;
@@ -39,6 +43,7 @@ public class InputManager : MonoBehaviour
         instance = this;
         inputActions = new PlayerInputs();
         inputActions.Enable();
+        saveFile = Application.persistentDataPath + "/keybindings.json";
     }    
 
     private void Update() {
@@ -175,6 +180,13 @@ public class InputManager : MonoBehaviour
         {
             //replace with something like json saving
             PlayerPrefs.SetString(action.actionMap + action.name + i, action.bindings[i].overridePath);
+
+            string jsonString = JsonUtility.ToJson(myKeybindData);
+            inputActions.SaveBindingOverridesAsJson();
+            myKeybindData.inputAction = inputActions;
+            
+            File.WriteAllText(saveFile, jsonString);
+            
         }
     }
 
@@ -182,7 +194,10 @@ public class InputManager : MonoBehaviour
     {
         if(inputActions == null){
             inputActions = new PlayerInputs();
+
         }
+
+        //inputActions.LoadBindingOverridesFromJson(saveFile);
 
         InputAction action = inputActions.asset.FindAction(actionName);
 
@@ -192,4 +207,9 @@ public class InputManager : MonoBehaviour
                 action.ApplyBindingOverride(i, PlayerPrefs.GetString(action.actionMap + action.name + i));
         }
     }
+}
+[System.Serializable]
+public class KeybindData
+{
+    public PlayerInputs inputAction;
 }
