@@ -539,7 +539,7 @@ MonoBehaviour:
   actionText: {fileID: 4438680422200346381}
   rebindButton: {fileID: 4438680423010288884}
   rebindText: {fileID: 4438680421458742804}
-  resetButton: {fileID: 4438680423010288884}
+  resetButton: {fileID: 4438680421451631143}
 --- !u!1 &4438680422888503414
 GameObject:
   m_ObjectHideFlags: 0

@@ -85,7 +85,7 @@ public class GunShooting : MonoBehaviour
 
             if(InputManager.instance.checkAmmo){
                 anim.SetBool("Ammo Checking", true);
-                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString(), this));
+                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString(), this, 5));
                 StartCoroutine(CheckGunCo());
             }else{
                 anim.SetBool("Ammo Checking", false);                
@@ -99,11 +99,13 @@ public class GunShooting : MonoBehaviour
                         if(info.canBeAutomatic){
                             currentFireMode = EFireMode.automatic;
                             InputManager.instance.changeFireMode = false;
+                            StartCoroutine(InGameManager.instance.GunInfoCo("Automatic", this, 2));
                         }
                     break;
                     case EFireMode.automatic:
                         currentFireMode = EFireMode.single;
                             InputManager.instance.changeFireMode = false;
+                            StartCoroutine(InGameManager.instance.GunInfoCo("Single", this, 2));
                     break;
                 }       
                 
