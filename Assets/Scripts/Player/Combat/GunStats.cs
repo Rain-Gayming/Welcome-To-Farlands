@@ -7,6 +7,7 @@ public class GunStats : ScriptableObject
 {
     [Header("Firemodes")]
     public bool canBeAutomatic;
+    public bool shotgun;
 
     [Header("Animation")]
     public int animationLayer;
@@ -27,4 +28,8 @@ public class GunStats : ScriptableObject
     public float aimRecoilZ;
     public float snappiness;
     public float returnSpeed;
+
+    [Header("Shotgun Info")]
+    public float rangeX;
+    public float rangeY;
 }

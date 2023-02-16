@@ -33,11 +33,15 @@ public class InputManager : MonoBehaviour
     public bool changeFireMode;
     public bool reloading;
     public bool checkAmmo;
+    public bool interact;
 
     [Header("Process Keys")]
     public bool alt;
     public bool shift;
     public bool control;
+
+    [Header("UI")]
+    public bool inventory;
 
     private void Awake() {
         instance = this;
@@ -72,6 +76,8 @@ public class InputManager : MonoBehaviour
         inputActions.Combat.Reload.canceled += x => reloading = false;
         inputActions.Combat.CheckAmmo.performed += x => checkAmmo = true;
         inputActions.Combat.CheckAmmo.canceled += x => checkAmmo = false;
+        inputActions.Combat.Interact.performed += x => interact = true;
+        inputActions.Combat.Interact.canceled += x => interact = false;
 
         
         inputActions.ProcessKeys.Alt.performed += x => alt = true;
@@ -80,6 +86,10 @@ public class InputManager : MonoBehaviour
         inputActions.ProcessKeys.Shift.canceled += x => shift = false;
         inputActions.ProcessKeys.Control.performed += x => control = true;
         inputActions.ProcessKeys.Control.canceled += x => control = false; 
+
+        
+        inputActions.UI.Inventory.performed += x => inventory = true;
+        inputActions.UI.Inventory.canceled += x => inventory = false; 
     }
 
 

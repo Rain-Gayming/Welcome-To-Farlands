@@ -7,5 +7,6 @@ public class PauseMenu : MonoBehaviour
     public void Unpause()
     {
         InGameManager.instance.paused = false;
+        MenuManager.instance.CloseAllMenus();
     }
 }

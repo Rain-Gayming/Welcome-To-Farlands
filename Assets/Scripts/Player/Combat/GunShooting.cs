@@ -29,6 +29,7 @@ public class GunShooting : MonoBehaviour
     {
         if(!InGameManager.instance.paused && equipped){
 
+            Item myAmmo = EquipmentManager.instance.ammoItem;
 
             fireTime -= Time.deltaTime;
 
@@ -37,22 +38,50 @@ public class GunShooting : MonoBehaviour
             running = PlayerMovement.instance.running;
 
 
-            if(canShoot && !PlayerMovement.instance.moving && ammo > 0){
+            if(canShoot && !PlayerMovement.instance.moving && ammo > 0 && myAmmo.baseItem.ammoItemReference){
                 if(InputManager.instance.shooting){
                     if(fireTime <= 0){
-                        RaycastHit hit;
-                        if(Physics.Raycast(shootPoint.position, shootPoint.forward, out hit ,info.range)){
-                            Debug.Log(hit.point);
+                        if(!info.shotgun){
+                             RaycastHit hit;
+                            if(Physics.Raycast(shootPoint.position, shootPoint.forward, out hit ,info.range)){
+                                Debug.Log(hit.point);
+                            }
+                            anim.SetBool("Shooting", true);
+                            shooting = true;
+                            ammo--;
+                            fireTime = info.fireRate;
+                            if(currentFireMode == EFireMode.single){
+                                InputManager.instance.shooting = false;
+                            }
+                            Instantiate(impact, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal, Vector3.up) * impact.transform.rotation);
+                            recoil.RecoilFire();
+                        }else{
+                            List<RaycastHit> hitPoints = new List<RaycastHit>();
+
+                            for (int i = 0; i < myAmmo.baseItem.ammoItemReference.pellets; i++)
+                            {
+                                RaycastHit hit;
+                                if(Physics.Raycast(new Vector3(Random.Range((shootPoint.position.x + -info.rangeX), (shootPoint.position.x + info.rangeX)),
+                                        Random.Range((shootPoint.position.y + -info.rangeY), (shootPoint.position.x + info.rangeY)), shootPoint.position.z)
+                                            , shootPoint.forward, out hit, info.range)){
+                                    hitPoints.Add(hit);
+                                    Debug.Log(hit.point);
+                                }
+                            }
+                            anim.SetBool("Shooting", true);
+                            shooting = true;
+                            ammo--;
+                            fireTime = info.fireRate;
+                            if(currentFireMode == EFireMode.single){
+                                InputManager.instance.shooting = false;
+                            }
+
+                            for (int i = 0; i < myAmmo.baseItem.ammoItemReference.pellets; i++)
+                            {                            
+                                Instantiate(impact, hitPoints[i].point + hitPoints[i].normal * 0.01f, Quaternion.LookRotation(hitPoints[i].normal, Vector3.up) * impact.transform.rotation);
+                            }
+                            recoil.RecoilFire();
                         }
-                        anim.SetBool("Shooting", true);
-                        shooting = true;
-                        ammo--;
-                        fireTime = info.fireRate;
-                        if(currentFireMode == EFireMode.single){
-                            InputManager.instance.shooting = false;
-                        }
-                        Instantiate(impact, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal, Vector3.up) * impact.transform.rotation);
-                        recoil.RecoilFire();
                     }
                 }else{
                     anim.SetBool("Shooting", false);
@@ -85,7 +114,7 @@ public class GunShooting : MonoBehaviour
 
             if(InputManager.instance.checkAmmo){
                 anim.SetBool("Ammo Checking", true);
-                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString(), this, 5));
+                StartCoroutine(InGameManager.instance.GunInfoCo(ammo.ToString(), this, 5, true));
                 StartCoroutine(CheckGunCo());
             }else{
                 anim.SetBool("Ammo Checking", false);                
@@ -99,13 +128,13 @@ public class GunShooting : MonoBehaviour
                         if(info.canBeAutomatic){
                             currentFireMode = EFireMode.automatic;
                             InputManager.instance.changeFireMode = false;
-                            StartCoroutine(InGameManager.instance.GunInfoCo("Automatic", this, 2));
+                            StartCoroutine(InGameManager.instance.GunInfoCo("Automatic", this, 2, false));
                         }
                     break;
                     case EFireMode.automatic:
                         currentFireMode = EFireMode.single;
                             InputManager.instance.changeFireMode = false;
-                            StartCoroutine(InGameManager.instance.GunInfoCo("Single", this, 2));
+                            StartCoroutine(InGameManager.instance.GunInfoCo("Single", this, 2, false));
                     break;
                 }       
                 

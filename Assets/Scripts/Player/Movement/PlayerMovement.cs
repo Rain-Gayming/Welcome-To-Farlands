@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        anim = GetComponentInChildren<Animator>();
         paused = InGameManager.instance.paused;
         if(!paused){
             inputVal.x = InputManager.instance.walking.x;
@@ -62,13 +63,15 @@ public class PlayerMovement : MonoBehaviour
 
             if(InputManager.instance.sprinting && stamina > 0){
                 if(inputVal != Vector2.zero){
-                    anim.SetBool("Running", true);
+                    if(anim)
+                        anim.SetBool("Running", true);
                     speed = runSpeed;
                     stamina -= Time.deltaTime * 2.5f;
                     running = true;
                 }else{
                     speed = walkSpeed;
-                    anim.SetBool("Running", false);
+                    if(anim)
+                        anim.SetBool("Running", false);
                     if(stamina > maxStamina){
                         stamina += Time.deltaTime * 2 * staminaRecoveryMultiplier;
                     }
@@ -76,7 +79,8 @@ public class PlayerMovement : MonoBehaviour
                 }
             }else{
                 speed = walkSpeed;
-                anim.SetBool("Running", false);
+                if(anim)
+                    anim.SetBool("Running", false);
                 if(stamina > maxStamina){
                     stamina += Time.deltaTime * 2 * staminaRecoveryMultiplier;
                 }
@@ -84,9 +88,11 @@ public class PlayerMovement : MonoBehaviour
             }
             
             if(inputVal != Vector2.zero){
-                anim.SetBool("Walking", true);
+                if(anim)
+                    anim.SetBool("Walking", true);
             }else{
-                anim.SetBool("Walking", false);
+                if(anim)
+                    anim.SetBool("Walking", false);
             }
 
             if(InputManager.instance.jumping && isGrounded){

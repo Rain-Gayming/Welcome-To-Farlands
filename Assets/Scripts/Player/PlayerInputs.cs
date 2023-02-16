@@ -223,6 +223,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""20d4af67-832e-4f0a-8b96-262c838ae7eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -278,6 +287,17 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KBM"",
                     ""action"": ""CheckAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a0a82ca0-3b4d-4fad-a21c-64e11d4c8c84"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -350,6 +370,34 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""4cb7c942-0eee-44ac-84f6-0205edc05ce8"",
+            ""actions"": [
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""7fc3810a-a7d5-451e-a069-fc6d350cfcde"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ceba6d61-a2cb-4eed-9acc-ed6fef5b1315"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KBM"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -385,11 +433,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         m_Combat_ChangeFireMode = m_Combat.FindAction("ChangeFireMode", throwIfNotFound: true);
         m_Combat_Reload = m_Combat.FindAction("Reload", throwIfNotFound: true);
         m_Combat_CheckAmmo = m_Combat.FindAction("CheckAmmo", throwIfNotFound: true);
+        m_Combat_Interact = m_Combat.FindAction("Interact", throwIfNotFound: true);
         // Process Keys
         m_ProcessKeys = asset.FindActionMap("Process Keys", throwIfNotFound: true);
         m_ProcessKeys_Alt = m_ProcessKeys.FindAction("Alt", throwIfNotFound: true);
         m_ProcessKeys_Control = m_ProcessKeys.FindAction("Control", throwIfNotFound: true);
         m_ProcessKeys_Shift = m_ProcessKeys.FindAction("Shift", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -519,6 +571,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_ChangeFireMode;
     private readonly InputAction m_Combat_Reload;
     private readonly InputAction m_Combat_CheckAmmo;
+    private readonly InputAction m_Combat_Interact;
     public struct CombatActions
     {
         private @PlayerInputs m_Wrapper;
@@ -528,6 +581,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         public InputAction @ChangeFireMode => m_Wrapper.m_Combat_ChangeFireMode;
         public InputAction @Reload => m_Wrapper.m_Combat_Reload;
         public InputAction @CheckAmmo => m_Wrapper.m_Combat_CheckAmmo;
+        public InputAction @Interact => m_Wrapper.m_Combat_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -552,6 +606,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @CheckAmmo.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckAmmo;
                 @CheckAmmo.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckAmmo;
                 @CheckAmmo.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnCheckAmmo;
+                @Interact.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_CombatActionsCallbackInterface = instance;
             if (instance != null)
@@ -571,6 +628,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                 @CheckAmmo.started += instance.OnCheckAmmo;
                 @CheckAmmo.performed += instance.OnCheckAmmo;
                 @CheckAmmo.canceled += instance.OnCheckAmmo;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -624,6 +684,39 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         }
     }
     public ProcessKeysActions @ProcessKeys => new ProcessKeysActions(this);
+
+    // UI
+    private readonly InputActionMap m_UI;
+    private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_Inventory;
+    public struct UIActions
+    {
+        private @PlayerInputs m_Wrapper;
+        public UIActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void SetCallbacks(IUIActions instance)
+        {
+            if (m_Wrapper.m_UIActionsCallbackInterface != null)
+            {
+                @Inventory.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
+                @Inventory.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
+                @Inventory.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInventory;
+            }
+            m_Wrapper.m_UIActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
+            }
+        }
+    }
+    public UIActions @UI => new UIActions(this);
     private int m_KBMSchemeIndex = -1;
     public InputControlScheme KBMScheme
     {
@@ -648,11 +741,16 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         void OnChangeFireMode(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnCheckAmmo(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
     public interface IProcessKeysActions
     {
         void OnAlt(InputAction.CallbackContext context);
         void OnControl(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
+    }
+    public interface IUIActions
+    {
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

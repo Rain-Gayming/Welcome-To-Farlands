@@ -28,9 +28,18 @@ public class InGameManager : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape)){
-            paused = !paused;
-            optionsMenu.GetComponentInParent<Menu>().open = false;
-            pauseMenu.GetComponentInParent<Menu>().open = paused;
+            if(paused){
+                MenuManager.instance.CloseAllMenus();
+                paused = false;
+                optionsMenu.GetComponentInParent<Menu>().open = false;
+                pauseMenu.GetComponentInParent<Menu>().open = false;
+
+            }else{
+                MenuManager.instance.CloseAllMenus();
+                paused = true;
+                optionsMenu.GetComponentInParent<Menu>().open = false;
+                pauseMenu.GetComponentInParent<Menu>().open = true;
+            }
         }
     }
 
@@ -42,14 +51,16 @@ public class InGameManager : MonoBehaviour
     public IEnumerator EnableSettings()
     {
         optionsMenu.GetComponentInParent<Menu>().open = true;
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.1f);
         optionsMenu.GetComponentInParent<Menu>().open = false;
     }
 
-    public IEnumerator GunInfoCo(string text, GunShooting gun, float time)
+    public IEnumerator GunInfoCo(string text, GunShooting gun, float time, bool stopsShooting)
     {
         gunInfoText.text = text;
-        gun.canShoot = false;
+        if(stopsShooting){
+            gun.canShoot = false;
+        }
         gunInfoUI.SetActive(true);
         yield return new WaitForSeconds(time);
         gun.canShoot = true;
